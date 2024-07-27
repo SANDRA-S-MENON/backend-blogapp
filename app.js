@@ -12,7 +12,9 @@ app.use(Express.json())
 app.use(Cors())
 
 Mongoose.connect("mongodb+srv://sandras02:sandrasmenon@cluster0.3g103sn.mongodb.net/blogAppDb?retryWrites=true&w=majority&appName=Cluster0")
+
 //create a post
+
 app.post("/create",async(req,res)=>{
     let input=req.body
     let token =req.headers.token
@@ -27,6 +29,8 @@ app.post("/create",async(req,res)=>{
         }
     })
     })
+
+   //viewall
 
     app.post("/viewall",(req,res)=>{
         let token=req.headers.token
@@ -47,7 +51,31 @@ app.post("/create",async(req,res)=>{
         })
         })
         
-           
+    //view my post  
+    app.post("/viewmypost",(req,res)=>{
+        let input=req.body
+        let token=req.headers.token
+        jwt.verify(token,"blogapp",(error,decoded)=>{
+        if (decoded && decoded.email) {
+            postModel.find(input).then(
+                (items)=>{
+                    res.json(items)
+                }
+            ).catch(
+                (error)=>{
+                    res.json({"status":error})
+                }
+            )
+        } else {
+            res.json({"status":"invalid authentication"})
+        }
+        })
+        })
+
+
+
+
+
 
 
 //Sign in
